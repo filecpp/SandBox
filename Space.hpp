@@ -11,6 +11,7 @@ private:
 	std::vector<int8_t> space;
 public:
 	Space() noexcept {
+		space.resize(Width * Height);
 		std::cout << "Space constructor was created\n";
 	}
 	~Space() noexcept {
@@ -25,7 +26,7 @@ public:
 				const int target_y) 
 	{
 		// Saving the index of the material that's at coordinates [x, y]
-		int8_t last_material = space[y * (Height - 1) + x];
+		int8_t last_material = space[y * (Width - 1) + x];
 		
 		// Were changing the space with the parameters we set
 		space[target_y * (Height - 1) + target_x] = last_material;
