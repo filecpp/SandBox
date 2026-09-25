@@ -19,10 +19,10 @@ private:
 	int8_t physic_status{false};
 public:
 	// Basic functions of the constructor and how it should respond to different events
-	[[noreturn]] Material() noexcept		
-		{ std::cerr << "Material default constructor called\n"; }
-	[[noreturn]] virtual ~Material() noexcept 
-		{ std::cerr << "Material destructor called\n"; }
+	[[noreturn]] Material() noexcept						  { 
+		std::cerr << "Material default constructor called\n"; }
+	[[noreturn]] virtual ~Material() noexcept				  {
+		std::cerr << "Material destructor called\n";		  }
 
 	// [Setters, getters] - thanks to which we [get, set] information
 	virtual void set_name(const std::string& name) noexcept { this->name = std::move(name); }
@@ -35,12 +35,6 @@ public:
 	virtual void behavior() noexcept { std::cerr << "Material behavior called\n"; }
 };
 
-/* 
- Sand - is the basic building block of the game
- and its behavior doesn't carry any surprising
- traits it just slides over other objects
- forming its figurative pyramid shape
-*/
 class Sand : public Material {
 public:
 	Sand() {
@@ -53,11 +47,7 @@ public:
 	}
 };
 
-/*
- Water - is the second basic element of the game
- it smoothly spreads out under the surface above
- which it is located
-*/
+
 class Water : public Material {
 public:
 	Water() {
@@ -70,9 +60,7 @@ public:
 	}
 };
 
-/*
- Wood is a material that burns and has no physical properties
-*/
+
 class Wood : public Material {
 public:
 	Wood() {
@@ -85,7 +73,7 @@ public:
 	}
 };
 
-enum material_translator {
+constexpr const enum material_translator {
 	sand = 0,
 	water = 1,
 	wood = 2,
