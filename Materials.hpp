@@ -7,7 +7,6 @@
 #include <cstdint>
 #include <memory>
 #include <unordered_map>
-#include <stdexcept>
 
 class Material {
 private:
@@ -19,9 +18,9 @@ private:
 	int8_t physic_status{false};
 public:
 	// Basic functions of the constructor and how it should respond to different events
-	[[noreturn]] Material() noexcept						  { 
+	Material() noexcept						  { 
 		std::cerr << "Material default constructor called\n"; }
-	[[noreturn]] virtual ~Material() noexcept				  {
+	virtual ~Material() noexcept				  {
 		std::cerr << "Material destructor called\n";		  }
 
 	// [Setters, getters] - thanks to which we [get, set] information
@@ -47,7 +46,6 @@ public:
 	}
 };
 
-
 class Water : public Material {
 public:
 	Water() {
@@ -59,7 +57,6 @@ public:
 		std::cout << "Water flows\n";
 	}
 };
-
 
 class Wood : public Material {
 public:
@@ -74,6 +71,7 @@ public:
 };
 
 constexpr const enum material_translator {
+	empty = -1,
 	sand = 0,
 	water = 1,
 	wood = 2,
