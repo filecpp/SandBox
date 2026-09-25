@@ -35,6 +35,12 @@ public:
 	virtual void behavior() noexcept { std::cerr << "Material behavior called\n"; }
 };
 
+/* 
+ Sand - is the basic building block of the game
+ and its behavior doesn't carry any surprising
+ traits it just slides over other objects
+ forming its figurative pyramid shape
+*/
 class Sand : public Material {
 public:
 	Sand() {
@@ -47,7 +53,11 @@ public:
 	}
 };
 
-
+/*
+ Water - is the second basic element of the game
+ it smoothly spreads out under the surface above
+ which it is located
+*/
 class Water : public Material {
 public:
 	Water() {
@@ -60,7 +70,9 @@ public:
 	}
 };
 
-
+/*
+ Wood is a material that burns and has no physical properties
+*/
 class Wood : public Material {
 public:
 	Wood() {
