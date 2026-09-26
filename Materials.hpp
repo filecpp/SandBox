@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Error.hpp"
+#include "Space.hpp"
+#include "Vector2.hpp"
 
 #include <iostream>
 #include <string>
 #include <cstdint>
 #include <memory>
+#include <utility>
 #include <unordered_map>
 
 class Material {
@@ -23,6 +26,10 @@ public:
 	virtual ~Material() noexcept				  {
 		std::cerr << "Material destructor called\n";		  }
 
+	// Function if 2 argumets called in [name, description]
+	Material(const std::string name, const std::string description) : 
+		name(std::move(name)), description(std::move(description)) { }
+
 	// [Setters, getters] - thanks to which we [get, set] information
 	virtual void set_name(const std::string& name) noexcept { this->name = std::move(name); }
 	virtual void set_description(const std::string& description) noexcept { this->description = std::move(description); }
@@ -31,7 +38,7 @@ public:
 	[[nodiscard]] virtual const std::string& get_description() const noexcept { return description; }
 	
 	// Behavior - what will trigger all sorts of effects of this material
-	virtual void behavior() noexcept { std::cerr << "Material behavior called\n"; }
+	virtual void behavior(Space& space) noexcept { std::cerr << "Material behavior called\n"; }
 };
 
 class Sand : public Material {
@@ -41,8 +48,8 @@ public:
 		set_description("A pile of sand");
 	}
 
-	void behavior() noexcept override {
-		std::cout << "Sand falls down\n";
+	void behavior(Space& space) noexcept override {
+		space.move(Vector2(2, 2), Vector2(3, 3));
 	}
 };
 
@@ -53,8 +60,9 @@ public:
 		set_description("Liquid water");
 	}
 
-	void behavior() noexcept override {
+	void behavior(Space& space) noexcept override {
 		std::cout << "Water flows\n";
+		space.move(Vector2(2, 2), Vector2(3, 3));
 	}
 };
 
@@ -65,16 +73,10 @@ public:
 		set_description("A piece of wood");
 	}
 
-	void behavior() noexcept override {
+	void behavior(Space& space) noexcept override {
 		std::cout << "Wood burns\n";
+		space.move(Vector2(2, 2), Vector2(3, 3));
 	}
-};
-
-constexpr const enum material_translator {
-	empty = -1,
-	sand = 0,
-	water = 1,
-	wood = 2,
 };
 
 inline std::unordered_map<std::string, std::unique_ptr<Material>> material_registry {
