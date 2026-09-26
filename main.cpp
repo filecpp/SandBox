@@ -1,8 +1,8 @@
 #include "Error.hpp"
+#include "Space.hpp"
+#include "Client.hpp"
 
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment(lib, "Ws2_32.lib")
+#include "MaterialTranslation.hpp"
 
 #include <iostream>
 #include <thread>
@@ -10,7 +10,19 @@
 #include <string>
 
 int main() {
-	THROW_ERROR("This is a test error message");
+	Space space;
+
+	space.add(Vector2(2, 2), material_translator::sand);
+	std::vector space_matrix = space.get_space();
+
+	std::cout << static_cast<const int>(space_matrix[2 * space.width + 2]) << " material.\n";
+	std::cout << static_cast<const int>(space_matrix[3 * space.width + 2]) << " material.\n";
+
+	space.move(Vector2(2, 2), Vector2(2, 3));
+	space_matrix = space.get_space();
+
+	std::cout << static_cast<const int>(space_matrix[2 * space.width + 2]) << " material.\n";
+	std::cout << static_cast<const int>(space_matrix[3 * space.width + 2]) << " material.\n";
 
 	return 0;
 } 
