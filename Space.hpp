@@ -1,41 +1,41 @@
 #pragma once
 
 #include "Screen.hpp"
+#include "MaterialTranslation.hpp"
+#include "Vector2.hpp"
 
-#include <iostream>
 #include <cstdint>
 #include <vector>
 
 class Space final {
 private:
-	std::vector<int8_t> space;
-public:
-	Space() noexcept {
-		space.resize(Width * Height);
-		std::cout << "Space constructor was created\n";
-	}
-	~Space() noexcept {
-		std::cout << "Space constructor was removed\n";
-	}
+    std::vector<std::int8_t> cells;
 
-	// We use `move` as a way to carry material from one position to another
-	void move(
-				const int x,
-				const int y,
-				const int target_x,
-				const int target_y) 
-	{
-		// Saving the index of the material that's at coordinates [x, y]
-		int8_t last_material = space[y * (Width - 1) + x];
-		
-		// Were changing the space with the parameters we set
-		space[target_y * (Height - 1) + target_x] = last_material;
-		space[y * (Height - 1) + x] = -1;
-	}
-	
-	// return the array space
-	[[nodiscard]]
-	const std::vector<int8_t>& space() const {
-		return space;
-	}
+public:
+    static constexpr int width = 720;
+    static constexpr int height = 480;
+
+    Space() {
+        cells.resize(width * height);
+    }
+
+    void add(Vector2 position, material_translator material) {
+        cells[position.y * width + position.x] =
+            static_cast<std::int8_t>(material);
+    }
+
+    void move(Vector2 position, Vector2 target_position) {
+        const auto source = position.y * width + position.x;
+        const auto target = target_position.y * width + target_position.x;
+
+        const auto material = cells[source];
+
+        cells[target] = material;
+        cells[source] = -1;
+    }
+
+    [[nodiscard]]
+    const std::vector<std::int8_t>& get_space() const noexcept {
+        return cells;
+    }
 };
