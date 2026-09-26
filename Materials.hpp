@@ -17,10 +17,10 @@ private:
 	// String variables with the name of the material and its description
 	std::string name{ "Unknown" };
 	std::string description{ "No description available" };
-
-	// Boolean variable indicating whether the material has physical properties or not
-	int8_t physic_status{ false };
 public:
+	// Boolean variable indicating whether the material has physical properties or not
+	int8_t physic_status{ true };
+
 	// Basic functions of the constructor and how it should respond to different events
 	Material() noexcept {
 		std::cerr << "Material default constructor called\n";
@@ -35,8 +35,8 @@ public:
 	}
 
 	// [Setters, getters] - thanks to which we [get, set] information
-	virtual void set_name(const std::string& name) noexcept { this->name = std::move(name); }
-	virtual void set_description(const std::string& description) noexcept { this->description = std::move(description); }
+	virtual void set_name(const std::string& name) { this->name = std::move(name); }
+	virtual void set_description(const std::string& description) { this->description = std::move(description); }
 
 	// Getting the name of the material
 	[[nodiscard]] virtual const std::string& get_name() const noexcept { return name; }
@@ -63,9 +63,24 @@ public:
 		if (space.get_space()[position.y * matrix_size.x + position.x] !=
 			static_cast<int8_t>(material_translator::sand)) {
 
-			std::cout << "Sand behavior\n";
-
 			return;
+		}
+
+		// 
+		if (space.get_space()[(position.y + 1) * space.width + position.x] ==
+			static_cast<int8_t>(material_translator::empty)) {
+
+			space.move(position, Vector2(position.x, position.y + 1));
+		}
+		else if (space.get_space()[(position.y + 1) * space.width + (position.x + 1)] ==
+			static_cast<int8_t>(material_translator::empty)) {
+
+			space.move(position, Vector2(position.x + 1, position.y + 1));
+		}
+		else if (space.get_space()[(position.y + 1) * space.width + (position.x - 1)] ==
+			static_cast<int8_t>(material_translator::empty)) {
+
+			space.move(position, Vector2(position.x - 1, position.y + 1));
 		}
 	}
 };
@@ -83,12 +98,12 @@ public:
 	void behavior(Space& space, Vector2 position, Vector2 matrix_size) noexcept override {
 		// Checking if the current cell contains sand
 		if (space.get_space()[position.y * matrix_size.x + position.x] !=
-			static_cast<int8_t>(material_translator::sand)) {
-
-			std::cout << "Water behavior\n";
+			static_cast<int8_t>(material_translator::water)) {
 
 			return;
 		}
+
+		std::cout << "Water behavior\n";
 	}
 };
 
@@ -105,17 +120,17 @@ public:
 	void behavior(Space& space, Vector2 position, Vector2 matrix_size) noexcept override {
 		// Checking if the current cell contains sand
 		if (space.get_space()[position.y * matrix_size.x + position.x] !=
-			static_cast<int8_t>(material_translator::sand)) {
-
-			std::cout << "Wood behavior\n";
+			static_cast<int8_t>(material_translator::wood)) {
 
 			return;
 		}
+
+		std::cout << "Wood behavior\n";
 	}
 };
 
 // Registry containing all available materials
-inline std::unordered_map<int8_t, std::unique_ptr<Material>> material_registry{
+inline std::unordered_map<int8_t, std::shared_ptr<Material>> material_registry{
 	{ static_cast<int8_t>(material_translator::sand), std::make_unique<Sand>() },
 	{ static_cast<int8_t>(material_translator::water), std::make_unique<Water>() },
 	{ static_cast<int8_t>(material_translator::wood), std::make_unique<Wood>() },
