@@ -4,6 +4,7 @@
 #include "MaterialTranslation.hpp"
 #include "Vector2.hpp"
 
+#include <iostream>
 #include <cstdint>
 #include <vector>
 
